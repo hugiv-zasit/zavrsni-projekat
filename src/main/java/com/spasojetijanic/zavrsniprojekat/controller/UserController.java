@@ -38,6 +38,13 @@ public class UserController {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  @GetMapping("/email")
+  public ResponseEntity<UserDTO> findByEmail(@RequestParam String email) {
+    Optional<User> user = userService.findByEmail(email);
+    return user.map(u -> ResponseEntity.ok(userDTOConverter.convertToDto(u)))
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
   @GetMapping
   public ResponseEntity<List<UserDTO>> findAll() {
     List<User> users = userService.findAll();
