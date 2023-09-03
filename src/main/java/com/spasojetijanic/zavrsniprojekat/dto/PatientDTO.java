@@ -3,14 +3,18 @@ package com.spasojetijanic.zavrsniprojekat.dto;
 import com.spasojetijanic.zavrsniprojekat.model.BloodGroup;
 import com.spasojetijanic.zavrsniprojekat.model.Gender;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class PatientDTO {
 
-  private Long patientId;
+  private Long id;
 
   @NotBlank
   private String name;
@@ -28,5 +32,6 @@ public class PatientDTO {
 
   private float weight;
 
+  @NotBlank
   private Long userId;
 }

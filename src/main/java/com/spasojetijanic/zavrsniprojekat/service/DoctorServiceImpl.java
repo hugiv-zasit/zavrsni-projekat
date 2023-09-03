@@ -29,10 +29,7 @@ public class DoctorServiceImpl implements DoctorService {
 
   @Override
   public void save(Doctor doctor) {
-    if (!userRepository.existsByEmail(doctor.getUser().getEmail())) {
-      doctorRepository.save(doctor);
-    } else
-      throw new RuntimeException("There already exists a user with that email!");
+    doctorRepository.save(doctor);
   }
 
   @Override

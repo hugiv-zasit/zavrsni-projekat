@@ -34,10 +34,7 @@ public class PatientServiceImpl implements PatientService {
 
   @Override
   public void save(Patient patient) {
-    if (!userRepository.existsByEmail(patient.getUser().getEmail())) {
-      patientRepository.save(patient);
-    } else
-      throw new RuntimeException("There already exists a user with that email!");
+    patientRepository.save(patient);
   }
 
   @Override

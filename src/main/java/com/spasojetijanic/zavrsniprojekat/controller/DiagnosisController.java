@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/diagnoses")
+@PreAuthorize("hasRole('DOCTOR')")
 public class DiagnosisController {
 
   @Autowired
@@ -26,7 +27,6 @@ public class DiagnosisController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<DiagnosisDTO> findById(@PathVariable Long id) {
     Optional<Diagnosis> diagnosis = diagnosisService.findById(id);
     return diagnosis.map(d -> ResponseEntity.ok(diagnosisDTOConverter.convertToDto(d)))
@@ -34,7 +34,6 @@ public class DiagnosisController {
   }
 
   @GetMapping
-  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<List<DiagnosisDTO>> findAll() {
     List<Diagnosis> diagnoses = diagnosisService.findAll();
     return ResponseEntity.ok(diagnoses.stream()
@@ -44,14 +43,12 @@ public class DiagnosisController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<Void> save(@Valid @RequestBody DiagnosisDTO diagnosisDTO) {
     diagnosisService.save(diagnosisDTOConverter.convertToEntity(diagnosisDTO));
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     diagnosisService.deleteById(id);
     return ResponseEntity.noContent().build();

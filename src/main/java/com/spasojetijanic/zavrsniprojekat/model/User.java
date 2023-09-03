@@ -44,18 +44,11 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
   private Doctor doctor;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
   private Patient patient;
-
-  public User(String username, String password, String email, Date joiningDate) {
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.joiningDate = joiningDate;
-  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

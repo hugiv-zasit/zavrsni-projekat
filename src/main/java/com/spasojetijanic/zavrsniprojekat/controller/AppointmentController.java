@@ -45,7 +45,7 @@ public class AppointmentController {
   }
 
   @GetMapping("/patient")
-  @PreAuthorize("hasRole('DOCTOR') || #patientId == authentication.patient.patientId")
+  @PreAuthorize("hasRole('DOCTOR') || #patientId == authentication.principal.patient.id")
   public ResponseEntity<List<AppointmentDTO>> findByPatientId(@RequestParam Long patientId) {
     List<Appointment> appointments = appointmentService.findByPatientId(patientId);
     return new ResponseEntity<>(appointments.stream()
@@ -54,7 +54,7 @@ public class AppointmentController {
   }
 
   @GetMapping("/doctor")
-  @PreAuthorize("hasRole('DOCTOR') || #doctorId == authentication.doctor.doctorId")
+  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<List<AppointmentDTO>> findByDoctorId(@RequestParam Long doctorId) {
     List<Appointment> appointments = appointmentService.findByDoctorId(doctorId);
     return new ResponseEntity<>(appointments.stream()
@@ -63,7 +63,7 @@ public class AppointmentController {
   }
 
   @GetMapping("/doctor_date")
-  @PreAuthorize("hasRole('DOCTOR') || #doctorId == authentication.doctor.doctorId")
+  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<List<AppointmentDTO>> findByDateAndByDoctorId(
       @RequestParam LocalDate appointmentDate,
       @RequestParam Long doctorId
@@ -75,14 +75,12 @@ public class AppointmentController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('PATIENT')")
   public ResponseEntity<Void> save(@Valid @RequestBody AppointmentDTO appointmentDTO) {
     appointmentService.save(appointmentDTOConverter.convertToEntity(appointmentDTO));
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('PATIENT')")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     appointmentService.deleteById(id);
     return ResponseEntity.noContent().build();

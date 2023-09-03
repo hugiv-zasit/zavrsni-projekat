@@ -3,11 +3,14 @@ package com.spasojetijanic.zavrsniprojekat.controller;
 import com.spasojetijanic.zavrsniprojekat.converter.DoctorDTOConverter;
 import com.spasojetijanic.zavrsniprojekat.dto.DoctorDTO;
 import com.spasojetijanic.zavrsniprojekat.model.Doctor;
+import com.spasojetijanic.zavrsniprojekat.model.User;
 import com.spasojetijanic.zavrsniprojekat.service.DoctorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +27,7 @@ public class DoctorController {
   private DoctorDTOConverter doctorDTOConverter;
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('MANAGER') || #id == authentication.doctor.doctorId")
+  @PreAuthorize("hasRole('DOCTOR') && #id == authentication.principal.doctor.id")
   public ResponseEntity<DoctorDTO> findById(@PathVariable Long id) {
     Optional<Doctor> doctor = doctorService.findById(id);
     return doctor.map(d -> ResponseEntity.ok(doctorDTOConverter.convertToDto(d)))
@@ -32,7 +35,7 @@ public class DoctorController {
   }
 
   @GetMapping
-  @PreAuthorize("hasRole('MANAGER')")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<List<DoctorDTO>> findAll() {
     List<Doctor> doctors = doctorService.findAll();
     return ResponseEntity.ok(doctors.stream()
@@ -41,22 +44,25 @@ public class DoctorController {
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('MANAGER')")
-  public ResponseEntity<Void> save(DoctorDTO doctorDTO) {
-    doctorService.save(doctorDTOConverter.convertToEntity(doctorDTO));
+  @PreAuthorize("hasRole('DOCTOR')")
+  public ResponseEntity<Void> save(@Valid @RequestBody DoctorDTO doctorDTO) {
+    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Doctor doctor = doctorDTOConverter.convertToEntity(doctorDTO);
+    doctor.setUser(user);
+    doctorService.save(doctor);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PutMapping
-  @PreAuthorize("hasRole('MANAGER')")
-  public ResponseEntity<Void> update(DoctorDTO doctorDTO) {
+  @PreAuthorize("hasRole('DOCTOR') && #doctorDTO.id == authentication.principal.doctor.id")
+  public ResponseEntity<Void> update(@Valid @RequestBody DoctorDTO doctorDTO) {
     doctorService.update(doctorDTOConverter.convertToEntity(doctorDTO));
     return ResponseEntity.ok().build();
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('MANAGER')")
-  public ResponseEntity<Void> deleteById(Long id) {
+  @PreAuthorize("hasRole('DOCTOR') && #id == authentication.principal.doctor.id")
+  public ResponseEntity<Void> deleteById(@PathVariable Long id) {
     doctorService.deleteById(id);
     return ResponseEntity.noContent().build();
   }

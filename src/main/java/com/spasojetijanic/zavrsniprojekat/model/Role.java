@@ -1,8 +1,7 @@
 package com.spasojetijanic.zavrsniprojekat.model;
 
 public enum Role {
-  PATIENT,
-  DOCTOR,
-  MANAGER,
-  ADMIN
+  ROLE_ADMIN,
+  ROLE_DOCTOR,
+  ROLE_PATIENT
 }
