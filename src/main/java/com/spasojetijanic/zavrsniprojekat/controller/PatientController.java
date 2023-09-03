@@ -62,7 +62,7 @@ public class PatientController {
   }
 
   @PutMapping
-  @PreAuthorize("hasRole('PATIENT') && #patientDTO.patientId == authentication.principal.patient.id")
+  @PreAuthorize("hasRole('PATIENT') && #patientDTO.id == authentication.principal.patient.id")
   public ResponseEntity<Void> update(@Valid @RequestBody PatientDTO patientDTO) {
     patientService.update(patientDTOConverter.convertToEntity(patientDTO));
     return ResponseEntity.ok().build();

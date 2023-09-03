@@ -1,12 +1,13 @@
 package com.spasojetijanic.zavrsniprojekat.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -19,7 +20,8 @@ public class Appointment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private LocalDateTime appointmentStartingTime;
+  @NotNull
+  private Timestamp appointmentStartingTime;
 
   @ManyToOne
   @JoinColumn(name = "patient_id")

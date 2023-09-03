@@ -4,12 +4,12 @@ import com.spasojetijanic.zavrsniprojekat.model.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AppointmentRepo extends JpaRepository<Appointment, Long> {
-  boolean existsByDoctorIdAndAppointmentStartingTime(Long doctorId, LocalDateTime appointmentStartingTime);
+  boolean existsByDoctorIdAndAppointmentStartingTime(Long doctorId, Timestamp appointmentStartingTime);
 
   List<Appointment> findByPatientId(Long patientId);
 

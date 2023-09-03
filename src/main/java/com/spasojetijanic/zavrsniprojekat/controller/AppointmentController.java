@@ -3,12 +3,14 @@ package com.spasojetijanic.zavrsniprojekat.controller;
 import com.spasojetijanic.zavrsniprojekat.converter.AppointmentDTOConverter;
 import com.spasojetijanic.zavrsniprojekat.dto.AppointmentDTO;
 import com.spasojetijanic.zavrsniprojekat.model.Appointment;
+import com.spasojetijanic.zavrsniprojekat.model.User;
 import com.spasojetijanic.zavrsniprojekat.service.AppointmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -75,12 +77,15 @@ public class AppointmentController {
   }
 
   @PostMapping
+  @PreAuthorize("hasRole('DOCTOR') || #appointmentDTO.patientId == authentication.principal.patient.id")
   public ResponseEntity<Void> save(@Valid @RequestBody AppointmentDTO appointmentDTO) {
+    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     appointmentService.save(appointmentDTOConverter.convertToEntity(appointmentDTO));
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('DOCTOR')")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     appointmentService.deleteById(id);
     return ResponseEntity.noContent().build();

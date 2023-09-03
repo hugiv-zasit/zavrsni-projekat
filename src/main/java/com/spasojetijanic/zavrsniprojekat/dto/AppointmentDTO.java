@@ -1,11 +1,10 @@
 package com.spasojetijanic.zavrsniprojekat.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -14,9 +13,13 @@ import java.time.LocalDateTime;
 public class AppointmentDTO {
 
   private Long id;
-  private LocalDateTime appointmentStartingTime;
 
+  @NotNull
+  private String appointmentStartingTime;
+
+  @NotNull
   private Long patientId;
 
+  @NotNull
   private Long doctorId;
 }
