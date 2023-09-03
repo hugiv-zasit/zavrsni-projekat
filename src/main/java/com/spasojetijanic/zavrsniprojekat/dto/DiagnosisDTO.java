@@ -19,6 +19,5 @@ public class DiagnosisDTO {
 
   private String description;
 
-  @NotBlank
   private Long appointmentId;
 }

@@ -32,6 +32,5 @@ public class PatientDTO {
 
   private float weight;
 
-  @NotBlank
   private Long userId;
 }
